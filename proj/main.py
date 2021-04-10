@@ -4,14 +4,12 @@ import proj.csp_.constraints.map_constraint as mc
 import proj.csp_.constraints.zebra_constraint as zc
 
 
-map_domain = ['red', 'green', 'blue']
-
-
 # solve map coloring problem with CSP algorithm
-def solve_map_coloring_problem():
-    problem_instance, triangulation = ig.create_problem_instance(5, 6)
+def solve_map_coloring_problem(plot_display='save'):
+    problem_instance, triangulation = ig.create_problem_instance(amount=5, border=5)
     variables = problem_instance.keys()
     constraints = mc.create_map_constraint_list(problem_instance)
+    map_domain = ['red', 'green', 'blue']
     domain = {}
     for variable in variables:
         domain[variable] = map_domain
@@ -22,8 +20,12 @@ def solve_map_coloring_problem():
     for res in result:
         print(res)
 
-    for r in result:
-        ig.create_colored_plot(*triangulation, r)
+    if plot_display == 'save':
+        ig.save_colored_plot(*triangulation, result)
+
+    elif plot_display == 'display':
+        for r in result:
+            ig.display_colored_plot(*triangulation, r)
 
 
 # solve einstein's riddle with CSP algorithm
@@ -83,5 +85,5 @@ def has_duplicates(ls):
 
 
 if __name__ == '__main__':
-    solve_einsteins_riddle()
-    # create_map_problem_instance()
+    # solve_einsteins_riddle()
+    solve_map_coloring_problem()
