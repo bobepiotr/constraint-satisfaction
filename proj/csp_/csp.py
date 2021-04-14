@@ -15,10 +15,8 @@ class Csp:
             local_assignment = assignment.copy()
             local_assignment[variable] = value
             if is_consistent_with(local_assignment, self.constraints):
-                result = self.backtracking_search(local_assignment, ls)
-                if result is not None:
-                    if len(assignment) == len(self.variables):
-                        ls.append(result)
+                self.backtracking_search(local_assignment, ls)
+
         return ls
 
 
