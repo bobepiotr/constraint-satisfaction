@@ -2,20 +2,22 @@ import proj.utilities.map_instance_generator as ig
 import proj.csp_.csp as csp
 import proj.csp_.constraints.map_constraint as mc
 import proj.csp_.constraints.zebra_constraint as zc
+import copy
 
 
 # solve map coloring problem with CSP algorithm
 def solve_map_coloring_problem(plot_display='save'):
-    problem_instance, triangulation = ig.create_problem_instance(amount=5, border=5)
+    problem_instance, triangulation = ig.create_problem_instance(amount=5, border=10)
     variables = problem_instance.keys()
     constraints = mc.create_map_constraint_list(problem_instance)
-    map_domain = ['red', 'green', 'blue']
+    map_domain = ['red', 'green', 'blue', 'yellow']
     domain = {}
     for variable in variables:
         domain[variable] = map_domain
 
     c = csp.Csp(variables, domain, constraints)
-    result = c.backtracking_search({}, [])
+    result = c.forward_checking(domain, {}, [])
+    # result = c.backtracking_search({}, [])
 
     for res in result:
         print(res)
