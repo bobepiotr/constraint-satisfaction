@@ -1,3 +1,5 @@
+import proj.csp_.constraints.map_constraint as mc
+
 
 class Csp:
     def __init__(self, variables, domain, constraints):
@@ -10,7 +12,7 @@ class Csp:
             ls.append(assignment)
             return assignment
 
-        variable = select_unassigned_variable(assignment, self.variables)
+        variable = variable_selection(assignment, self.variables)
         for value in self.domain[variable]:
             local_assignment = assignment.copy()
             local_assignment[variable] = value
@@ -24,9 +26,8 @@ class Csp:
             ls.append(assignment)
             return assignment
 
-        variable = select_unassigned_variable(assignment, self.variables)
+        variable = variable_selection(assignment, self.variables)
         neighbours = find_neighbours(assignment, self.constraints, variable)
-        print(neighbours)
         for value in domain[variable]:
             local_assignment = assignment.copy()
             local_assignment[variable] = value
@@ -44,10 +45,38 @@ class Csp:
         return ls
 
 
-def select_unassigned_variable(assignments, variables):
+def get_unassigned_variable(assignments, variables):
+    unassigned = []
     for variable in variables:
         if variable not in assignments:
-            return variable
+            unassigned.append(variable)
+    return unassigned
+
+
+def variable_selection(assignments, variables):
+    return get_unassigned_variable(assignments, variables)[0]
+
+
+def variable_selection_mrv(assignments, variables, domain):
+    unassigned = get_unassigned_variable(assignments, variables)
+    possible_values_of_unassigned: dict = {k: v for k, v in domain.items() if k in unassigned}
+    lowest = min(possible_values_of_unassigned, key=lambda k: len(possible_values_of_unassigned[k]))
+    return lowest
+
+
+def variable_selection_degree(assignments, variables, constraints):
+    unassigned = get_unassigned_variable(assignments, variables)
+    variables_constraints = {}
+
+    for c in constraints:
+        for v in c.variables:
+            if v in unassigned:
+                if v in variables_constraints:
+                    variables_constraints[v] += 1
+                else:
+                    variables_constraints[v] = 1
+    biggest = max(variables_constraints, key=lambda k: variables_constraints[k])
+    return biggest
 
 
 def is_consistent_with(assignments, constraints):
@@ -66,3 +95,18 @@ def find_neighbours(assignments, constraints, variable):
                     connected.add(v)
 
     return connected
+
+
+if __name__ == '__main__':
+    cons = [
+        mc.MapConstraint(["4", "5"]),
+        mc.MapConstraint(["2", "3"]),
+        mc.MapConstraint(["2", "5"]),
+        mc.MapConstraint(["4", "3"]),
+        mc.MapConstraint(["5", "3"])
+    ]
+
+    d = {"1": [1,2], "2": [1,2,3,4,5], "3": [4,3,2,1], "4": [1,3,5], "5": [1,3,2,1]}
+    #var = variable_selection_mrv({"1": 1, "2": 2, "3": 3}, ["1", "2", "3", "4", "5"], d)
+    var = variable_selection_degree({"1": 1, "2": 2, "3": 3}, ["1", "2", "3", "4", "5"], cons)
+    print(var)
