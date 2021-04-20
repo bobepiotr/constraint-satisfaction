@@ -13,7 +13,7 @@ def solve_map_coloring_problem(plot_display='save'):
     map_domain = ['red', 'green', 'blue', 'yellow']
     domain = {}
     for variable in variables:
-        domain[variable] = map_domain
+        domain[variable] = map_domain.copy()
 
     c = csp.Csp(variables, domain, constraints)
     result = c.forward_checking(domain, {}, [])
