@@ -95,18 +95,3 @@ def find_neighbours(assignments, constraints, variable):
                     connected.add(v)
 
     return connected
-
-
-if __name__ == '__main__':
-    cons = [
-        mc.MapConstraint(["4", "5"]),
-        mc.MapConstraint(["2", "3"]),
-        mc.MapConstraint(["2", "5"]),
-        mc.MapConstraint(["4", "3"]),
-        mc.MapConstraint(["5", "3"])
-    ]
-
-    d = {"1": [1,2], "2": [1,2,3,4,5], "3": [4,3,2,1], "4": [1,3,5], "5": [1,3,2,1]}
-    #var = variable_selection_mrv({"1": 1, "2": 2, "3": 3}, ["1", "2", "3", "4", "5"], d)
-    var = variable_selection_degree({"1": 1, "2": 2, "3": 3}, ["1", "2", "3", "4", "5"], cons)
-    print(var)
