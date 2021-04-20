@@ -59,8 +59,8 @@ def variable_selection(assignments, variables):
 
 def variable_selection_mrv(assignments, variables, domain):
     unassigned = get_unassigned_variable(assignments, variables)
-    possible_values_of_unassigned: dict = {k: v for k, v in domain.items() if k in unassigned}
-    lowest = min(possible_values_of_unassigned, key=lambda k: len(possible_values_of_unassigned[k]))
+    poss_values: dict = {k: v for k, v in domain.items() if k in unassigned}
+    lowest = min(poss_values, key=lambda k: len(poss_values[k]))
     return lowest
 
 
