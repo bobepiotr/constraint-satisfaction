@@ -1,5 +1,5 @@
 import proj.csp_.constraints.map_constraint as mc
-
+import copy
 
 class Csp:
     def __init__(self, variables, domain, constraints):
@@ -21,23 +21,29 @@ class Csp:
 
         return ls
 
-    def forward_checking(self, domain, assignment, ls):
+    def forward_checking(self, domain, assignment, ls, selection_kind=''):
         if len(assignment) == len(self.variables):
             ls.append(assignment)
             return assignment
-
-        variable = variable_selection(assignment, self.variables)
+        if selection_kind == 'mrv':
+            variable = variable_selection_mrv(assignment, self.variables, domain)
+        elif selection_kind == 'deg':
+            variable = variable_selection_degree(assignment, self.variables, self.constraints)
+        else:
+            variable = variable_selection(assignment, self.variables)
         neighbours = find_neighbours(assignment, self.constraints, variable)
         for value in domain[variable]:
             local_assignment = assignment.copy()
             local_assignment[variable] = value
-            local_domain = domain.copy()
+            local_domain = copy.deepcopy(domain)
             if is_consistent_with(local_assignment, self.constraints):
                 for neighbour in neighbours:
                     for n_value in local_domain[neighbour]:
                         local_assignment[neighbour] = n_value
                         if not is_consistent_with(local_assignment, self.constraints):
                             local_domain[neighbour].remove(n_value)
+                    if not local_domain[neighbour]:
+                        continue
                     if neighbour in local_assignment:
                         del local_assignment[neighbour]
                 self.forward_checking(local_domain, local_assignment, ls)
