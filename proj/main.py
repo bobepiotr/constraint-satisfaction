@@ -43,7 +43,7 @@ def solve_einsteins_riddle():
 
     dom = {}
     for variable in var:
-        dom[variable] = house
+        dom[variable] = house.copy()
 
     constraint = [
         zc.ZebraConstraint(zc.all_different, countries),   # W każdym domu mieszka inna osoba
@@ -70,7 +70,8 @@ def solve_einsteins_riddle():
     ]
 
     c = csp.Csp(var, dom, constraint)
-    result = c.backtracking_search({}, [])
+    # result = c.backtracking_search({}, [])
+    result = c.forward_checking(dom, {}, [])
     print(result)
     print('Fishes are in the house number: '+str(result[0]['fish']))
 
@@ -87,5 +88,5 @@ def has_duplicates(ls):
 
 
 if __name__ == '__main__':
-    # solve_einsteins_riddle()
-    solve_map_coloring_problem()
+    solve_einsteins_riddle()
+    # solve_map_coloring_problem()
