@@ -21,7 +21,7 @@ class Csp:
 
         return ls
 
-    def forward_checking(self, domain, assignment, ls, selection_kind=''):
+    def forward_checking(self, domain, assignment, ls, selection_kind='nuv'):
         if len(assignment) == len(self.variables):
             ls.append(assignment)
             return assignment
@@ -29,7 +29,7 @@ class Csp:
             variable = variable_selection_mrv(assignment, self.variables, domain)
         elif selection_kind == 'deg':
             variable = variable_selection_degree(assignment, self.variables, self.constraints)
-        else:
+        elif selection_kind == 'nuv':
             variable = variable_selection(assignment, self.variables)
         neighbours = find_neighbours(assignment, self.constraints, variable)
         for value in domain[variable]:
@@ -46,7 +46,7 @@ class Csp:
                         continue
                     if neighbour in local_assignment:
                         del local_assignment[neighbour]
-                self.forward_checking(local_domain, local_assignment, ls)
+                self.forward_checking(local_domain, local_assignment, ls, selection_kind)
 
         return ls
 
