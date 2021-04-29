@@ -1,6 +1,7 @@
 import proj.csp_.constraints.map_constraint as mc
 import copy
 
+
 class Csp:
     def __init__(self, variables, domain, constraints):
         self.variables = variables
